@@ -9,6 +9,7 @@ const classSchema = new mongoose.Schema(
       ref: "Teacher",
       required: true,
     },
+    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }], // List of subjects in the class
   },
   { timestamps: true }
 );
