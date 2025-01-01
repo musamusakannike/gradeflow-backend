@@ -6,6 +6,7 @@ const {
   validateCreateSubjectSchema,
   validateJoinSubjectSchema,
   validateLeaveSubjectSchema,
+  validateToggleSubjectJoinSchema,
 } = require("../utils/subject.validator"); // Validation schema
 
 const createSubject = async (req, res) => {
@@ -264,10 +265,56 @@ const viewStudentsInSubjects = async (req, res) => {
   }
 };
 
+// Toggle subject join permission by admin and teacher
+const toggleSubjectJoinPermission = async (req, res) => {
+  try {
+    const { error } = validateToggleSubjectJoinSchema(req.body);
+    if (error) {
+      return res.status(400).json({
+        status: "error",
+        message: error.details[0].message,
+        data: null,
+      });
+    }
+    // Extract subject ID and desired allowStudentAddition flag from the request body
+    const { subjectId, allowStudentAddition } = req.body;
+
+    // Ensure the subject exists
+    const subject = await Subject.findById(subjectId);
+    if (!subject) {
+      return res.status(404).json({
+        status: "error",
+        message: "Subject not found",
+        data: null,
+      });
+    }
+
+    // Update the allowStudentAddition flag
+    subject.allowStudentAddition = allowStudentAddition;
+    await subject.save();
+
+    res.status(200).json({
+      status: "success",
+      message: `Subject join permission has been ${
+        allowStudentAddition ? "enabled" : "disabled"
+      }`,
+      data: { subjectId, allowStudentAddition },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
 module.exports = {
   createSubject,
   joinSubject,
   leaveSubject,
   viewEnrolledSubjects,
   viewStudentsInSubjects,
+  toggleSubjectJoinPermission,
 };

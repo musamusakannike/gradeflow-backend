@@ -26,4 +26,18 @@ const validateLeaveSubjectSchema = (data) => {
   return schema.validate(data);
 };
 
-module.exports = { validateCreateSubjectSchema, validateJoinSubjectSchema, validateLeaveSubjectSchema };
+const validateToggleSubjectJoinSchema = (data) => {
+  const schema = Joi.object({
+    subjectId: Joi.string().required(),
+    allowStudentAddition: Joi.boolean().required(),
+  });
+
+  return schema.validate(data);
+};
+
+module.exports = {
+  validateCreateSubjectSchema,
+  validateJoinSubjectSchema,
+  validateLeaveSubjectSchema,
+  validateToggleSubjectJoinSchema,
+};

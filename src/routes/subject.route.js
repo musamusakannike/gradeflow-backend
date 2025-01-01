@@ -5,6 +5,7 @@ const {
   leaveSubject,
   viewEnrolledSubjects,
   viewStudentsInSubjects,
+  toggleSubjectJoinPermission,
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -43,6 +44,13 @@ router.get(
   "/students",
   authenticate("teacher"), // Ensure only authenticated teachers can access
   viewStudentsInSubjects
+);
+
+// Route to toggle subject join permission by admin and teacher
+router.patch(
+  "/toggle-join-permission",
+  authenticate(["admin", "teacher"]), // Ensure only authenticated admins can access
+  toggleSubjectJoinPermission
 );
 
 module.exports = router;
