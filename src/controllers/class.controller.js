@@ -2,7 +2,12 @@ const Admin = require("../models/admin.model");
 const Class = require("../models/class.model");
 const Teacher = require("../models/teacher.model");
 const Student = require("../models/student.model");
-const { validateClassSchema, validateAssignTeacherSchema, validateListStudentsSchema, validateListClassesForTeacherSchema } = require("../utils/class.validator");
+const {
+  validateClassSchema,
+  validateAssignTeacherSchema,
+  validateListStudentsSchema,
+  validateListClassesForTeacherSchema,
+} = require("../utils/class.validator");
 
 const createClass = async (req, res) => {
   try {
@@ -74,13 +79,11 @@ const createClass = async (req, res) => {
       teacher: teacherId,
     });
 
-    res
-      .status(201)
-      .json({
-        status: "success",
-        message: "Class created successfully",
-        class: newClass,
-      });
+    res.status(201).json({
+      status: "success",
+      message: "Class created successfully",
+      class: newClass,
+    });
   } catch (err) {
     console.error(err);
     res
@@ -107,7 +110,7 @@ const assignTeacherToClass = async (req, res) => {
 
     // Determine the schoolId based on the role
     let schoolId;
-    if (role === 'admin') {
+    if (role === "admin") {
       const admin = await Admin.findById(userId);
       if (!admin) {
         return res.status(404).json({
@@ -238,7 +241,7 @@ const listClassesForTeacher = async (req, res) => {
     }
 
     // Ensure the user is a teacher or admin
-    if (req.user.role !== 'teacher' && req.user.role !== 'admin') {
+    if (req.user.role !== "teacher" && req.user.role !== "admin") {
       return res.status(403).json({
         status: "error",
         message: "Only teachers and admins can access this endpoint",
@@ -265,7 +268,9 @@ const listClassesForTeacher = async (req, res) => {
     // Get additional details for each class (e.g., total number of students)
     const classesWithDetails = await Promise.all(
       classes.map(async (classObj) => {
-        const studentCount = await Student.countDocuments({ classId: classObj._id });
+        const studentCount = await Student.countDocuments({
+          classId: classObj._id,
+        });
         return {
           classId: classObj._id,
           name: classObj.name,
@@ -292,4 +297,32 @@ const listClassesForTeacher = async (req, res) => {
   }
 };
 
-module.exports = { createClass, assignTeacherToClass, listStudentsInClass, listClassesForTeacher };
+const listClassesWithTeachers = async (req, res) => {
+  try {
+    // Query all classes and populate teacher details
+    const classes = await Class.find()
+      .populate("teacher", "fullName email") // Include teacher details
+      .select("name teacher"); // Select specific fields
+
+    res.status(200).json({
+      status: "success",
+      message: "Classes and their teachers retrieved successfully",
+      data: classes,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+module.exports = {
+  createClass,
+  assignTeacherToClass,
+  listStudentsInClass,
+  listClassesForTeacher,
+  listClassesWithTeachers,
+};
