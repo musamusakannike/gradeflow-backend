@@ -4,6 +4,7 @@ const {
   joinSubject,
   leaveSubject,
   viewEnrolledSubjects,
+  viewStudentsInSubjects,
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -35,6 +36,13 @@ router.get(
   "/my-subjects",
   authenticate("student"), // Ensure only authenticated students can access
   viewEnrolledSubjects
+);
+
+// Route for teachers to view students in their subjects
+router.get(
+  "/students",
+  authenticate("teacher"), // Ensure only authenticated teachers can access
+  viewStudentsInSubjects
 );
 
 module.exports = router;

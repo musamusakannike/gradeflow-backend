@@ -223,4 +223,51 @@ const viewEnrolledSubjects = async (req, res) => {
   }
 };
 
-module.exports = { createSubject, joinSubject, leaveSubject, viewEnrolledSubjects };
+// View students in subjects by teacher
+const viewStudentsInSubjects = async (req, res) => {
+  try {
+    // Get the teacher ID from the authenticated user
+    const teacherId = req.user.id;
+
+    // Query subjects assigned to the teacher
+    const subjects = await Subject.find({ teacherId })
+      .populate("classId", "name") // Populate class details
+      .select("name classId students"); // Select specific fields
+
+    // Prepare the response with student details
+    const subjectDetails = await Promise.all(
+      subjects.map(async (subject) => {
+        const students = await Student.find({
+          _id: { $in: subject.students },
+        }).select("fullName email studentId"); // Fetch student details
+        return {
+          subjectId: subject._id,
+          subjectName: subject.name,
+          className: subject.classId.name,
+          students,
+        };
+      })
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Students in subjects retrieved successfully",
+      data: subjectDetails,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+module.exports = {
+  createSubject,
+  joinSubject,
+  leaveSubject,
+  viewEnrolledSubjects,
+  viewStudentsInSubjects,
+};
