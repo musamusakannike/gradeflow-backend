@@ -33,6 +33,25 @@ const adminSignup = async (req, res) => {
       schoolAddress,
       password,
     } = req.body;
+    // Check if an admin with the given email already exists
+    const existingAdmin = await Admin.findOne({ adminEmail });
+    if (existingAdmin) {
+      return res.status(409).json({
+        status: "error",
+        message: "Admin with this email already exists",
+        data: null,
+      });
+    }
+    // Check if a school with the given email already exists
+    const existingSchool = await School.findOne({ schoolEmail });
+    if (existingSchool) {
+      return res.status(409).json({
+        status: "error",
+        message: "School with this email already exists",
+        data: null,
+      });
+    }
+    // Generate a unique school ID for the new school
     const schoolId = generateUniqueId("SCH");
     const admin = await Admin.create({
       fullName,
