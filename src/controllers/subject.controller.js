@@ -197,4 +197,30 @@ const leaveSubject = async (req, res) => {
   }
 };
 
-module.exports = { createSubject, joinSubject, leaveSubject };
+const viewEnrolledSubjects = async (req, res) => {
+  try {
+    // Get the student ID from the authenticated user
+    const studentId = req.user.id;
+
+    // Query subjects where the student is enrolled
+    const enrolledSubjects = await Subject.find({ students: studentId })
+      .populate("teacherId", "fullName email") // Populate teacher details
+      .populate("classId", "name") // Populate class details
+      .select("name classId teacherId"); // Return specific fields
+
+    res.status(200).json({
+      status: "success",
+      message: "Enrolled subjects retrieved successfully",
+      data: enrolledSubjects,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+module.exports = { createSubject, joinSubject, leaveSubject, viewEnrolledSubjects };
