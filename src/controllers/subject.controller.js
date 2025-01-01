@@ -8,6 +8,7 @@ const {
   validateLeaveSubjectSchema,
   validateToggleSubjectJoinSchema,
   validateToggleJoinPermissionsBulkSchema,
+  validateAddRemoveStudentSchema,
 } = require("../utils/subject.validator"); // Validation schema
 
 const createSubject = async (req, res) => {
@@ -359,6 +360,126 @@ const toggleJoinPermissionsBulk = async (req, res) => {
   }
 };
 
+// Allow teachers to add students to their subjects
+const addStudentToSubject = async (req, res) => {
+  try {
+    const { error } = validateAddRemoveStudentSchema(req.body);
+    if (error) {
+      return res.status(400).json({
+        status: "error",
+        message: error.details[0].message,
+        data: null,
+      });
+    }
+    // Extract the teacher ID, student ID, and subject ID from the request
+    const teacherId = req.user.id; // Authenticated teacher
+    const { studentId, subjectId } = req.body;
+
+    // Ensure the subject exists and is assigned to the teacher
+    const subject = await Subject.findOne({ _id: subjectId, teacherId });
+    if (!subject) {
+      return res.status(404).json({
+        status: "error",
+        message:
+          "Subject not found or you are not authorized to manage this subject",
+        data: null,
+      });
+    }
+
+    // Ensure the student exists
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({
+        status: "error",
+        message: "Student not found",
+        data: null,
+      });
+    }
+
+    // Check if the student is already enrolled in the subject
+    if (subject.students.includes(studentId)) {
+      return res.status(409).json({
+        status: "error",
+        message: "Student is already enrolled in this subject",
+        data: null,
+      });
+    }
+
+    // Add the student to the subject
+    subject.students.push(studentId);
+    await subject.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "Student added to the subject successfully",
+      data: { subjectId, studentId },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+// Allow teachers to remove students from their subjects
+const removeStudentFromSubject = async (req, res) => {
+  try {
+    const { error } = validateAddRemoveStudentSchema(req.body);
+    if (error) {
+      return res.status(400).json({
+        status: "error",
+        message: error.details[0].message,
+        data: null,
+      });
+    }
+    // Extract the teacher ID, student ID, and subject ID from the request
+    const teacherId = req.user.id; // Authenticated teacher
+    const { studentId, subjectId } = req.body;
+
+    // Ensure the subject exists and is assigned to the teacher
+    const subject = await Subject.findOne({ _id: subjectId, teacherId });
+    if (!subject) {
+      return res.status(404).json({
+        status: "error",
+        message:
+          "Subject not found or you are not authorized to manage this subject",
+        data: null,
+      });
+    }
+
+    // Check if the student is enrolled in the subject
+    if (!subject.students.includes(studentId)) {
+      return res.status(404).json({
+        status: "error",
+        message: "Student is not enrolled in this subject",
+        data: null,
+      });
+    }
+
+    // Remove the student from the subject
+    subject.students = subject.students.filter(
+      (id) => id.toString() !== studentId.toString()
+    );
+    await subject.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "Student removed from the subject successfully",
+      data: { subjectId, studentId },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
 module.exports = {
   createSubject,
   joinSubject,
@@ -367,4 +488,6 @@ module.exports = {
   viewStudentsInSubjects,
   toggleSubjectJoinPermission,
   toggleJoinPermissionsBulk,
+  addStudentToSubject,
+  removeStudentFromSubject,
 };

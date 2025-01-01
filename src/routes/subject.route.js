@@ -7,6 +7,8 @@ const {
   viewStudentsInSubjects,
   toggleSubjectJoinPermission,
   toggleJoinPermissionsBulk,
+  addStudentToSubject,
+  removeStudentFromSubject,
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -59,6 +61,20 @@ router.patch(
   "/toggle-join-permissions-bulk",
   authenticate("admin"), // Ensure only admins can access
   toggleJoinPermissionsBulk
+);
+
+// Route for teachers to add a student to a subject
+router.post(
+  "/add-student",
+  authenticate("teacher"), // Only authenticated teachers can access
+  addStudentToSubject
+);
+
+// Route for teachers to remove a student from a subject
+router.post(
+  "/remove-student",
+  authenticate("teacher"), // Only authenticated teachers can access
+  removeStudentFromSubject
 );
 
 module.exports = router;
