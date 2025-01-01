@@ -7,6 +7,7 @@ const {
   validateJoinSubjectSchema,
   validateLeaveSubjectSchema,
   validateToggleSubjectJoinSchema,
+  validateToggleJoinPermissionsBulkSchema,
 } = require("../utils/subject.validator"); // Validation schema
 
 const createSubject = async (req, res) => {
@@ -310,6 +311,54 @@ const toggleSubjectJoinPermission = async (req, res) => {
   }
 };
 
+const toggleJoinPermissionsBulk = async (req, res) => {
+  try {
+    const { error } = validateToggleJoinPermissionsBulkSchema(req.body);
+    if (error) {
+      return res.status(400).json({
+        status: "error",
+        message: error.details[0].message,
+        data: null,
+      });
+    }
+    // Extract subject IDs and the desired flag from the request body
+    const { subjectIds, allowStudentAddition } = req.body;
+
+    // Validate that subjectIds is a non-empty array
+    if (!Array.isArray(subjectIds) || subjectIds.length === 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid input: subjectIds must be a non-empty array",
+        data: null,
+      });
+    }
+
+    // Update the allowStudentAddition flag for all specified subjects
+    const result = await Subject.updateMany(
+      { _id: { $in: subjectIds } }, // Match all subjects in the subjectIds array
+      { $set: { allowStudentAddition } } // Set the allowStudentAddition field
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: `Join permissions have been ${
+        allowStudentAddition ? "enabled" : "disabled"
+      } for ${result.modifiedCount} subject(s)`,
+      data: {
+        updatedCount: result.modifiedCount,
+        allowStudentAddition,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
 module.exports = {
   createSubject,
   joinSubject,
@@ -317,4 +366,5 @@ module.exports = {
   viewEnrolledSubjects,
   viewStudentsInSubjects,
   toggleSubjectJoinPermission,
+  toggleJoinPermissionsBulk,
 };

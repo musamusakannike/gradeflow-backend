@@ -6,6 +6,7 @@ const {
   viewEnrolledSubjects,
   viewStudentsInSubjects,
   toggleSubjectJoinPermission,
+  toggleJoinPermissionsBulk,
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -51,6 +52,13 @@ router.patch(
   "/toggle-join-permission",
   authenticate(["admin", "teacher"]), // Ensure only authenticated admins can access
   toggleSubjectJoinPermission
+);
+
+// Admin-only bulk action to toggle join permissions for multiple subjects
+router.patch(
+  "/toggle-join-permissions-bulk",
+  authenticate("admin"), // Ensure only admins can access
+  toggleJoinPermissionsBulk
 );
 
 module.exports = router;
