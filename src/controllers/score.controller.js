@@ -2,7 +2,7 @@ const Score = require("../models/score.model"); // Score model
 const Term = require("../models/term.model"); // Term model
 const Subject = require("../models/subject.model"); // Subject model
 const Student = require("../models/student.model"); // Student model
-const { validateAssignScoresSchema } = require("../utils/score.validator");
+const { validateAssignScoresSchema, validateGetScoresSchema } = require("../utils/score.validator");
 
 const assignScores = async (req, res) => {
   try {
@@ -77,6 +77,15 @@ const assignScores = async (req, res) => {
 // Retrieve scores for a specific term and subject
 const getScoresForTermAndSubject = async (req, res) => {
   try {
+    // Validate request query parameters
+    const { error } = validateGetScoresSchema(req.query);
+    if (error) {
+      return res.status(400).json({
+        status: "error",
+        message: error.details[0].message,
+        data: null,
+      });
+    }
     const teacherId = req.user.id; // Authenticated teacher
     const { subjectId, termId } = req.query;
 
