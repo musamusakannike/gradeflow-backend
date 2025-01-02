@@ -319,10 +319,92 @@ const listClassesWithTeachers = async (req, res) => {
   }
 };
 
+// Delete a class
+const deleteClass = async (req, res) => {
+  try {
+    const { classId } = req.params;
+
+    // Check if the class exists
+    const existingClass = await Class.findById(classId);
+    if (!existingClass) {
+      return res.status(404).json({
+        status: "error",
+        message: "Class not found",
+        data: null,
+      });
+    }
+
+    await Class.findByIdAndDelete(classId);
+
+    res.status(200).json({
+      status: "success",
+      message: "Class deleted successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+// Update a class
+const updateClass = async (req, res) => {
+  try {
+    const { classId } = req.params;
+    const { name, teacherId } = req.body;
+
+    // Check if the class exists
+    const existingClass = await Class.findById(classId);
+    if (!existingClass) {
+      return res.status(404).json({
+        status: "error",
+        message: "Class not found",
+        data: null,
+      });
+    }
+
+    // Check if the teacher exists
+    if (teacherId) {
+      const teacherExists = await Teacher.findById(teacherId);
+      if (!teacherExists) {
+        return res.status(404).json({
+          status: "error",
+          message: "Teacher not found",
+          data: null,
+        });
+      }
+    }
+
+    // Update the class
+    existingClass.name = name || existingClass.name;
+    existingClass.teacher = teacherId || existingClass.teacher;
+    await existingClass.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "Class updated successfully",
+      data: existingClass,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+
 module.exports = {
   createClass,
   assignTeacherToClass,
   listStudentsInClass,
   listClassesForTeacher,
   listClassesWithTeachers,
+  deleteClass,
+  updateClass
 };

@@ -5,6 +5,8 @@ const {
   listStudentsInClass,
   listClassesForTeacher,
   listClassesWithTeachers,
+  deleteClass,
+  updateClass
 } = require("../controllers/class.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -36,5 +38,11 @@ router.get(
   authenticate(["admin", "teacher"]), // Allow admins and teachers to access
   listClassesWithTeachers
 );
+
+// Delete a class
+router.delete("/:classId", authenticate("admin"), deleteClass);
+
+// Update a class
+router.patch("/:classId", authenticate("admin"), updateClass);
 
 module.exports = router;
