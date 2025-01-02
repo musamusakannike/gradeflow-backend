@@ -6,7 +6,13 @@ const Admin = require("../models/admin.model");
 // Get total number of students
 const getTotalStudents = async (req, res) => {
   try {
-    const { id: userId } = req.user; // Assuming admin's schoolId is stored in req.user
+    const { id: userId } = req.user;
+    if (!userId) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+      });
+    }
     // Get schoolId from the user
     const { schoolId } = await Admin.findById(userId);
     const totalStudents = await Student.countDocuments({ schoolId });
@@ -28,6 +34,12 @@ const getTotalStudents = async (req, res) => {
 const getTotalTeachers = async (req, res) => {
   try {
     const { id: userId } = req.user;
+    if (!userId) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+      });
+    }
     // Get schoolId from the user
     const { schoolId } = await Admin.findById(userId);
     // Count the number of teachers in the school using the schoolId
@@ -50,6 +62,12 @@ const getTotalTeachers = async (req, res) => {
 const getTotalClasses = async (req, res) => {
   try {
     const { id: userId } = req.user;
+    if (!userId) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+      });
+    }
     // Get schoolId from the user
     const { schoolId } = await Admin.findById(userId);
 
@@ -69,8 +87,37 @@ const getTotalClasses = async (req, res) => {
   }
 };
 
+const getStatistics = async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    if (!userId) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+      });
+    }
+    const { schoolId } = await Admin.findById(userId);
+
+    const totalStudents = await Student.countDocuments({ schoolId });
+    const totalTeachers = await Teacher.countDocuments({ schoolId });
+    const totalClasses = await Class.countDocuments({ schoolId });
+
+    res.status(200).json({
+      status: "success",
+      data: { totalStudents, totalTeachers, totalClasses },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
   getTotalStudents,
   getTotalTeachers,
   getTotalClasses,
+  getStatistics,
 };
