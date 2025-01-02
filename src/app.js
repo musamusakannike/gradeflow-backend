@@ -9,6 +9,7 @@ const classRoutes = require('./routes/class.route');
 const subjectRoutes = require('./routes/subject.route');
 const scoreRoutes = require('./routes/score.route');
 const termRoutes = require('./routes/term.route');
+const adminRoutes = require('./routes/admin.route');
 
 const app = express();
 connectDB();
@@ -28,5 +29,6 @@ app.use("/api/v1/class", classRoutes);
 app.use("/api/v1/subject", subjectRoutes);
 app.use("/api/v1/score", scoreRoutes);
 app.use("/api/v1/term", termRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 module.exports = app;
