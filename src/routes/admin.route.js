@@ -3,7 +3,8 @@ const {
   getTotalStudents,
   getTotalTeachers,
   getTotalClasses,
-  getStatistics
+  getStatistics,
+  getAllTeachers,
 } = require("../controllers/admin.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -14,6 +15,10 @@ router.get("/students/count", authenticate("admin"), getTotalStudents);
 router.get("/teachers/count", authenticate("admin"), getTotalTeachers);
 router.get("/classes/count", authenticate("admin"), getTotalClasses);
 router.get('/statistics', authenticate('admin'), getStatistics);
+
+// Get all teachers
+router.get("/list-teachers", authenticate("admin"), getAllTeachers);
+
 
 
 module.exports = router;

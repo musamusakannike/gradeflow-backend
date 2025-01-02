@@ -115,9 +115,30 @@ const getStatistics = async (req, res) => {
   }
 };
 
+// Get a list of all teachers
+const getAllTeachers = async (req, res) => {
+  try {
+    const teachers = await Teacher.find({}, "fullName email teacherId"); // Select only required fields
+    res.status(200).json({
+      status: "success",
+      message: "Teachers retrieved successfully",
+      data: teachers,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+
 module.exports = {
   getTotalStudents,
   getTotalTeachers,
   getTotalClasses,
   getStatistics,
+  getAllTeachers
 };
