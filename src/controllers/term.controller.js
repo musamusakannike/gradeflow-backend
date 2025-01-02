@@ -127,4 +127,23 @@ const toggleScoring = async (req, res) => {
   }
 };
 
-module.exports = { createSession, createTerm, toggleScoring };
+const getSessions = async (req, res) => {
+  try {
+    const sessions = await Session.find().populate("terms"); // Populate terms if needed
+    res.status(200).json({
+      status: "success",
+      message: "Sessions retrieved successfully",
+      data: sessions,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+
+module.exports = { createSession, createTerm, toggleScoring, getSessions };
