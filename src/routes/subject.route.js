@@ -9,6 +9,7 @@ const {
   toggleJoinPermissionsBulk,
   addStudentToSubject,
   removeStudentFromSubject,
+  getSubjectsForTeacher,
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -76,5 +77,7 @@ router.post(
   authenticate("teacher"), // Only authenticated teachers can access
   removeStudentFromSubject
 );
+
+router.get("/teacher/subjects", authenticate("teacher"), getSubjectsForTeacher);
 
 module.exports = router;
