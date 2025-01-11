@@ -480,6 +480,41 @@ const removeStudentFromSubject = async (req, res) => {
   }
 };
 
+// Get a list of subjects assigned to a specific teacher
+const getSubjectsForTeacher = async (req, res) => {
+  try {
+    // Get the teacher ID from the authenticated user
+    const teacherId = req.user.id;
+
+    // Query subjects where the teacher is assigned
+    const subjects = await Subject.find({ teacherId })
+      .populate("classId", "name") // Populate class details
+      .select("name classId students"); // Return specific fields
+
+    // Format the response
+    const formattedSubjects = subjects.map((subject) => ({
+      subjectId: subject._id,
+      subjectName: subject.name,
+      className: subject.classId?.name || "Class not assigned",
+      totalStudents: subject.students.length, // Count of enrolled students
+    }));
+
+    res.status(200).json({
+      status: "success",
+      message: "Subjects retrieved successfully",
+      data: formattedSubjects,
+    });
+  } catch (err) {
+    console.error("Error retrieving subjects for teacher:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+
 module.exports = {
   createSubject,
   joinSubject,
@@ -490,4 +525,5 @@ module.exports = {
   toggleJoinPermissionsBulk,
   addStudentToSubject,
   removeStudentFromSubject,
+  getSubjectsForTeacher,
 };
