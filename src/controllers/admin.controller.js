@@ -2,6 +2,7 @@ const Student = require("../models/student.model");
 const Teacher = require("../models/teacher.model");
 const Class = require("../models/class.model");
 const Admin = require("../models/admin.model");
+const Subject = require("../models/subject.model");
 
 // Get total number of students
 const getTotalStudents = async (req, res) => {
@@ -104,7 +105,7 @@ const getStatistics = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      data: { totalStudents, totalTeachers, totalClasses },
+      data: { totalStudents, totalTeachers, totalClasses, schoolId },
     });
   } catch (err) {
     console.error(err);
@@ -134,11 +135,67 @@ const getAllTeachers = async (req, res) => {
   }
 };
 
+const deleteTeacher = async (req, res) => {
+  try {
+    const { teacherId } = req.params; // Extract teacherId from the route parameters
+
+    // Ensure the teacherId is provided
+    if (!teacherId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Teacher ID is required",
+      });
+    }
+
+    // Check if the teacher is assigned to any class
+    const assignedClass = await Class.findOne({ teacher: teacherId });
+    if (assignedClass) {
+      return res.status(400).json({
+        status: "error",
+        message: `Teacher is assigned to class ${assignedClass.name}. Please reassign or remove the teacher before deletion.`,
+      });
+    }
+
+    // Check if the teacher is assigned to any subject
+    const assignedSubject = await Subject.findOne({ teacherId });
+    if (assignedSubject) {
+      return res.status(400).json({
+        status: "error",
+        message: `Teacher is assigned to subject ${assignedSubject.name}. Please reassign or remove the teacher before deletion.`,
+      });
+    }
+
+    // Find and delete the teacher by teacherId field
+    const deletedTeacher = await Teacher.findByIdAndDelete(teacherId);
+
+    // If teacher not found, return an error
+    if (!deletedTeacher) {
+      return res.status(404).json({
+        status: "error",
+        message: "Teacher not found",
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Teacher deleted successfully",
+      data: null,
+    });
+  } catch (err) {
+    console.error("Error deleting teacher:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
 
 module.exports = {
   getTotalStudents,
   getTotalTeachers,
   getTotalClasses,
   getStatistics,
-  getAllTeachers
+  getAllTeachers,
+  deleteTeacher,
 };
