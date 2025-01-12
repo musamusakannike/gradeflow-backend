@@ -10,7 +10,9 @@ const {
   addStudentToSubject,
   removeStudentFromSubject,
   getSubjectsForTeacher,
-  getAllSubjects
+  getAllSubjects,
+  deleteSubject, // Add deleteSubject function
+  editSubjectDetails, // Add editSubjectDetails function
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -79,10 +81,24 @@ router.post(
   removeStudentFromSubject
 );
 
+// Route for teachers to view their assigned subjects
 router.get("/teacher/subjects", authenticate("teacher"), getSubjectsForTeacher);
 
-//@ts-check Get all subjects with class and teacher details
+// Get all subjects with class and teacher details (admin only)
 router.get("/list", authenticate("admin"), getAllSubjects);
 
+// Admin-only route to delete a subject
+router.delete(
+  "/delete/:subjectId", // Pass subjectId as a parameter
+  authenticate("admin"), // Ensure only admins can delete
+  deleteSubject
+);
+
+// Admin and teacher route to edit subject details
+router.patch(
+  "/edit/:subjectId", // Pass subjectId as a parameter
+  authenticate(["admin", "teacher"]), // Ensure only admins or teachers can edit
+  editSubjectDetails
+);
 
 module.exports = router;

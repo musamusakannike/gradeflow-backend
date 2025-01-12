@@ -536,6 +536,136 @@ const getAllSubjects = async (req, res) => {
   }
 };
 
+const deleteSubject = async (req, res) => {
+  try {
+    const { subjectId } = req.params;
+
+    // Ensure the subject exists
+    const subject = await Subject.findById(subjectId);
+    if (!subject) {
+      return res.status(404).json({
+        status: "error",
+        message: "Subject not found",
+        data: null,
+      });
+    }
+
+    // Remove the subject from the class's subject list
+    const studentClass = await Class.findById(subject.classId);
+    if (studentClass) {
+      studentClass.subjects = studentClass.subjects.filter(
+        (id) => id.toString() !== subjectId.toString()
+      );
+      await studentClass.save();
+    }
+
+    // Delete the subject
+    await Subject.findByIdAndDelete(subjectId);
+
+    res.status(200).json({
+      status: "success",
+      message: "Subject deleted successfully",
+      data: { subjectId },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+const editSubjectDetails = async (req, res) => {
+  try {
+    const { subjectId } = req.params;
+    const { name, classId, teacherId } = req.body;
+
+    // Validate request body
+    if (!name && !classId && !teacherId) {
+      return res.status(400).json({
+        status: "error",
+        message: "At least one field (name, classId, teacherId) must be provided",
+        data: null,
+      });
+    }
+
+    // Find the subject
+    const subject = await Subject.findById(subjectId);
+    if (!subject) {
+      return res.status(404).json({
+        status: "error",
+        message: "Subject not found",
+        data: null,
+      });
+    }
+
+    // Update class association if needed
+    if (classId && classId !== subject.classId.toString()) {
+      const newClass = await Class.findById(classId);
+      if (!newClass) {
+        return res.status(404).json({
+          status: "error",
+          message: "Class not found",
+          data: null,
+        });
+      }
+
+      // Remove subject from the old class
+      const oldClass = await Class.findById(subject.classId);
+      if (oldClass) {
+        oldClass.subjects = oldClass.subjects.filter(
+          (id) => id.toString() !== subjectId.toString()
+        );
+        await oldClass.save();
+      }
+
+      // Add subject to the new class
+      newClass.subjects.push(subjectId);
+      await newClass.save();
+
+      subject.classId = classId;
+    }
+
+    // Update teacher association if needed
+    if (teacherId && teacherId !== subject.teacherId.toString()) {
+      const teacher = await Teacher.findById(teacherId);
+      if (!teacher) {
+        return res.status(404).json({
+          status: "error",
+          message: "Teacher not found",
+          data: null,
+        });
+      }
+
+      subject.teacherId = teacherId;
+    }
+
+    // Update subject name if provided
+    if (name) {
+      subject.name = name;
+    }
+
+    // Save updated subject
+    await subject.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "Subject details updated successfully",
+      data: subject,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
+
+
 module.exports = {
   createSubject,
   joinSubject,
@@ -548,4 +678,6 @@ module.exports = {
   removeStudentFromSubject,
   getSubjectsForTeacher,
   getAllSubjects,
+  deleteSubject,
+  editSubjectDetails,
 };
