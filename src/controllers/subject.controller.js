@@ -514,6 +514,27 @@ const getSubjectsForTeacher = async (req, res) => {
   }
 };
 
+const getAllSubjects = async (req, res) => {
+  try {
+    // Fetch all subjects with related class and teacher details
+    const subjects = await Subject.find()
+      .populate("classId", "name") // Populate class name
+      .populate("teacherId", "fullName email"); // Populate teacher's full name and email
+
+    res.status(200).json({
+      status: "success",
+      message: "Subjects retrieved successfully",
+      data: subjects,
+    });
+  } catch (err) {
+    console.error("Error fetching subjects:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: null,
+    });
+  }
+};
 
 module.exports = {
   createSubject,
@@ -526,4 +547,5 @@ module.exports = {
   addStudentToSubject,
   removeStudentFromSubject,
   getSubjectsForTeacher,
+  getAllSubjects,
 };
