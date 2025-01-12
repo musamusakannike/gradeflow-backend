@@ -10,6 +10,7 @@ const {
   addStudentToSubject,
   removeStudentFromSubject,
   getSubjectsForTeacher,
+  getAllSubjects
 } = require("../controllers/subject.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -79,5 +80,9 @@ router.post(
 );
 
 router.get("/teacher/subjects", authenticate("teacher"), getSubjectsForTeacher);
+
+//@ts-check Get all subjects with class and teacher details
+router.get("/list", authenticate("admin"), getAllSubjects);
+
 
 module.exports = router;
