@@ -1,6 +1,7 @@
 const Teacher = require("../models/teacher.model");
 const Subject = require("../models/subject.model");
 const Class = require("../models/class.model");
+const Student = require("../models/student.model");
 
 const getTeacherDashboardStats = async (req, res) => {
   try {
@@ -64,5 +65,49 @@ const getTeacherDashboardStats = async (req, res) => {
     });
   }
 };
+const getTeacherClasses = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-module.exports = { getTeacherDashboardStats };
+    const teacher = await Teacher.findById(userId);
+    if (!teacher) {
+      return res.status(404).json({
+        status: "error",
+        message: "Teacher not found",
+      });
+    }
+
+    const classes = await Class.find({ teacher: teacher._id }).populate([
+      { path: "subjects", select: "name allowStudentAddition" },
+    ]);
+
+    const classIds = classes.map((cls) => cls._id);
+    const students = await Student.find({ classId: { $in: classIds } });
+
+    const formattedClasses = classes.map((cls) => ({
+      _id: cls._id,
+      name: cls.name,
+      subjects: cls.subjects.map((subj) => ({
+        name: subj.name,
+        allowStudentAddition: subj.allowStudentAddition,
+      })),
+      totalStudents: students.filter((student) =>
+        student.classId.equals(cls._id)
+      ).length,
+    }));
+
+    res.status(200).json({
+      status: "success",
+      message: "Teacher classes retrieved successfully",
+      data: formattedClasses,
+    });
+  } catch (err) {
+    console.error("Error retrieving teacher classes:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = { getTeacherDashboardStats, getTeacherClasses };
