@@ -489,7 +489,7 @@ const getSubjectsForTeacher = async (req, res) => {
     // Query subjects where the teacher is assigned
     const subjects = await Subject.find({ teacherId })
       .populate("classId", "name") // Populate class details
-      .select("name classId students"); // Return specific fields
+      .select("name classId students allowStudentAddition"); // Include allowStudentAddition
 
     // Format the response
     const formattedSubjects = subjects.map((subject) => ({
@@ -497,6 +497,7 @@ const getSubjectsForTeacher = async (req, res) => {
       subjectName: subject.name,
       className: subject.classId?.name || "Class not assigned",
       totalStudents: subject.students.length, // Count of enrolled students
+      allowStudentAddition: subject.allowStudentAddition, // Current join permission flag
     }));
 
     res.status(200).json({
@@ -586,7 +587,8 @@ const editSubjectDetails = async (req, res) => {
     if (!name && !classId && !teacherId) {
       return res.status(400).json({
         status: "error",
-        message: "At least one field (name, classId, teacherId) must be provided",
+        message:
+          "At least one field (name, classId, teacherId) must be provided",
         data: null,
       });
     }
@@ -664,7 +666,6 @@ const editSubjectDetails = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   createSubject,
