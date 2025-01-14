@@ -191,6 +191,39 @@ const deleteTeacher = async (req, res) => {
   }
 };
 
+const listStudentsBySchool = async (req, res) => {
+  try {
+    const { id: adminId } = req.user;
+
+    // Ensure the admin exists
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({
+        status: "error",
+        message: "Admin not found",
+      });
+    }
+
+    // Find all students in the admin's school
+    const students = await Student.find({ schoolId: admin.schoolId })
+      .populate("classId", "name")
+      .select("fullName studentId email classId");
+
+    res.status(200).json({
+      status: "success",
+      message: "Students retrieved successfully",
+      data: students,
+    });
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
+
+
 module.exports = {
   getTotalStudents,
   getTotalTeachers,
@@ -198,4 +231,5 @@ module.exports = {
   getStatistics,
   getAllTeachers,
   deleteTeacher,
+  listStudentsBySchool, 
 };

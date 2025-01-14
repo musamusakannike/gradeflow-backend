@@ -6,6 +6,7 @@ const {
   getStatistics,
   getAllTeachers,
   deleteTeacher,
+  listStudentsBySchool,
 } = require("../controllers/admin.controller");
 const { authenticate } = require("../middlewares/auth.middleware");
 
@@ -24,5 +25,8 @@ router.delete(
 
 // Get all teachers
 router.get("/list-teachers", authenticate("admin"), getAllTeachers);
+
+// Get all students
+router.get("/list-students", authenticate("admin"), listStudentsBySchool);
 
 module.exports = router;
