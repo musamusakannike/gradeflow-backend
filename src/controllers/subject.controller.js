@@ -229,36 +229,47 @@ const viewEnrolledSubjects = async (req, res) => {
 // View students in subjects by teacher
 const viewStudentsInSubjects = async (req, res) => {
   try {
-    // Get the teacher ID from the authenticated user
-    const teacherId = req.user.id;
+    const { subjectId } = req.query; // Extract subjectId from query parameters
 
-    // Query subjects assigned to the teacher
-    const subjects = await Subject.find({ teacherId })
+    if (!subjectId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Subject ID is required",
+        data: null,
+      });
+    }
+
+    // Fetch the subject details by ID
+    const subject = await Subject.findById(subjectId)
       .populate("classId", "name") // Populate class details
       .select("name classId students"); // Select specific fields
 
-    // Prepare the response with student details
-    const subjectDetails = await Promise.all(
-      subjects.map(async (subject) => {
-        const students = await Student.find({
-          _id: { $in: subject.students },
-        }).select("fullName email studentId"); // Fetch student details
-        return {
-          subjectId: subject._id,
-          subjectName: subject.name,
-          className: subject.classId.name,
-          students,
-        };
-      })
-    );
+    if (!subject) {
+      return res.status(404).json({
+        status: "error",
+        message: "Subject not found",
+        data: null,
+      });
+    }
 
+    // Fetch the students enrolled in the subject
+    const students = await Student.find({
+      _id: { $in: subject.students },
+    }).select("fullName email studentId"); // Fetch specific student details
+
+    // Prepare the response
     res.status(200).json({
       status: "success",
-      message: "Students in subjects retrieved successfully",
-      data: subjectDetails,
+      message: "Students in the subject retrieved successfully",
+      data: {
+        subjectId: subject._id,
+        subjectName: subject.name,
+        className: subject.classId.name,
+        students,
+      },
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error retrieving subject students:", err);
     res.status(500).json({
       status: "error",
       message: "Internal server error",
@@ -266,6 +277,7 @@ const viewStudentsInSubjects = async (req, res) => {
     });
   }
 };
+
 
 // Toggle subject join permission by admin and teacher
 const toggleSubjectJoinPermission = async (req, res) => {
@@ -371,7 +383,7 @@ const addStudentToSubject = async (req, res) => {
         data: null,
       });
     }
-    // Extract the teacher ID, student ID, and subject ID from the request
+    // Extract the teacher ID, studentId, and subjectId from the request
     const teacherId = req.user.id; // Authenticated teacher
     const { studentId, subjectId } = req.body;
 
@@ -386,8 +398,8 @@ const addStudentToSubject = async (req, res) => {
       });
     }
 
-    // Ensure the student exists
-    const student = await Student.findById(studentId);
+    // Ensure the student exists using the studentId field
+    const student = await Student.findOne({ studentId });
     if (!student) {
       return res.status(404).json({
         status: "error",
@@ -397,7 +409,7 @@ const addStudentToSubject = async (req, res) => {
     }
 
     // Check if the student is already enrolled in the subject
-    if (subject.students.includes(studentId)) {
+    if (subject.students.includes(student._id)) {
       return res.status(409).json({
         status: "error",
         message: "Student is already enrolled in this subject",
@@ -406,7 +418,7 @@ const addStudentToSubject = async (req, res) => {
     }
 
     // Add the student to the subject
-    subject.students.push(studentId);
+    subject.students.push(student._id); // Use the student's _id
     await subject.save();
 
     res.status(200).json({
@@ -435,7 +447,7 @@ const removeStudentFromSubject = async (req, res) => {
         data: null,
       });
     }
-    // Extract the teacher ID, student ID, and subject ID from the request
+    // Extract the teacher ID, studentId, and subjectId from the request
     const teacherId = req.user.id; // Authenticated teacher
     const { studentId, subjectId } = req.body;
 
@@ -450,8 +462,18 @@ const removeStudentFromSubject = async (req, res) => {
       });
     }
 
+    // Ensure the student exists using the studentId field
+    const student = await Student.findOne({ studentId });
+    if (!student) {
+      return res.status(404).json({
+        status: "error",
+        message: "Student not found",
+        data: null,
+      });
+    }
+
     // Check if the student is enrolled in the subject
-    if (!subject.students.includes(studentId)) {
+    if (!subject.students.includes(student._id)) {
       return res.status(404).json({
         status: "error",
         message: "Student is not enrolled in this subject",
@@ -461,7 +483,7 @@ const removeStudentFromSubject = async (req, res) => {
 
     // Remove the student from the subject
     subject.students = subject.students.filter(
-      (id) => id.toString() !== studentId.toString()
+      (id) => id.toString() !== student._id.toString()
     );
     await subject.save();
 
