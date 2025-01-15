@@ -1,6 +1,16 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-const scoreSchema = new mongoose.Schema(
+// Define interface for score document
+export interface IScore extends Document {
+  studentId: mongoose.Types.ObjectId;
+  subjectId: mongoose.Types.ObjectId;
+  termId: mongoose.Types.ObjectId;
+  test1: number;
+  test2: number;
+  exam: number;
+}
+
+const scoreSchema: Schema<IScore> = new Schema(
   {
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -24,4 +34,5 @@ const scoreSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Score", scoreSchema);
+const Score: Model<IScore> = mongoose.model<IScore>("Score", scoreSchema);
+export default Score;
