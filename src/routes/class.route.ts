@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express, { Router } from "express";
+import {
   createClass,
   assignTeacherToClass,
   listStudentsInClass,
@@ -7,10 +7,10 @@ const {
   listClassesWithTeachers,
   deleteClass,
   updateClass
-} = require("../controllers/class.controller");
-const { authenticate } = require("../middlewares/auth.middleware");
+} from "../controllers/class.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Admin-only routes
 router.post("/create", authenticate(["admin", "teacher"]), createClass);
@@ -45,4 +45,4 @@ router.delete("/:classId", authenticate("admin"), deleteClass);
 // Update a class
 router.patch("/:classId", authenticate("admin"), updateClass);
 
-module.exports = router;
+export default router;

@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express, {Router} from 'express';
+import {
   createSubject,
   joinSubject,
   leaveSubject,
@@ -13,10 +13,10 @@ const {
   getAllSubjects,
   deleteSubject, // Add deleteSubject function
   editSubjectDetails, // Add editSubjectDetails function
-} = require("../controllers/subject.controller");
-const { authenticate } = require("../middlewares/auth.middleware");
+} from "../controllers/subject.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Admin-only route to create a subject
 router.post(
@@ -101,4 +101,4 @@ router.patch(
   editSubjectDetails
 );
 
-module.exports = router;
+export default router;

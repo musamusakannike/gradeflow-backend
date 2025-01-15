@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express, {Router} from "express";
+import {
   getTotalStudents,
   getTotalTeachers,
   getTotalClasses,
@@ -7,10 +7,10 @@ const {
   getAllTeachers,
   deleteTeacher,
   listStudentsBySchool,
-} = require("../controllers/admin.controller");
-const { authenticate } = require("../middlewares/auth.middleware");
+} from "../controllers/admin.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Admin-only routes
 router.get("/students/count", authenticate("admin"), getTotalStudents);
@@ -29,4 +29,5 @@ router.get("/list-teachers", authenticate("admin"), getAllTeachers);
 // Get all students
 router.get("/list-students", authenticate("admin"), listStudentsBySchool);
 
-module.exports = router;
+
+export default router;

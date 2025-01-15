@@ -1,8 +1,11 @@
-const express = require("express");
-const { assignScores, getScoresForTermAndSubject } = require("../controllers/score.controller");
-const { authenticate } = require("../middlewares/auth.middleware");
+import express, { Router } from "express";
+import {
+  assignScores,
+  getScoresForTermAndSubject,
+} from "../controllers/score.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Route for teachers to assign scores
 router.post(
@@ -18,4 +21,4 @@ router.get(
   getScoresForTermAndSubject
 );
 
-module.exports = router;
+export default router;
