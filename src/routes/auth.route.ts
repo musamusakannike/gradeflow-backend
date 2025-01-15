@@ -1,15 +1,15 @@
-const express = require("express");
-const {
+import express, { Router } from "express";
+import {
   adminSignup,
   adminLogin,
   createTeacher,
   createStudent,
   teacherLogin,
   studentLogin,
-} = require("../controllers/auth.controller");
-const { authenticate } = require("../middlewares/auth.middleware");
+} from "../controllers/auth.controller";
+import { authenticate } from "../middlewares/auth.middleware";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Admin routes
 router.post("/admin/signup", adminSignup);
@@ -21,7 +21,7 @@ router.post(
 );
 router.post(
   "/admin/create/student",
-  authenticate(['admin', 'teacher']),
+  authenticate(["admin", "teacher"]),
   createStudent
 );
 
@@ -29,4 +29,4 @@ router.post(
 router.post("/teacher/login", teacherLogin);
 router.post("/student/login", studentLogin);
 
-module.exports = router;
+export default router;
