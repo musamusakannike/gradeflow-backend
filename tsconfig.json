@@ -27,7 +27,8 @@
     "resolveJsonModule": true, // Allow importing `.json` files as modules
 
     /* Debugging options */
-    "sourceMap": true // Generate source maps for debugging
+    "sourceMap": true, // Generate source maps for debugging
+    "typeRoots": ["./node_modules/@types", "./src/types"],
   },
   "include": ["src/**/*.ts"], // Include all TypeScript files in the `src` directory
   "exclude": ["node_modules", "dist"] // Exclude `node_modules` and `dist` directories
