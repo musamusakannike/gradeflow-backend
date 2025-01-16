@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const validateAssignScoresSchema = (data) => {
+const validateAssignScoresSchema = (data: any) => {
   const schema = Joi.object({
     subjectId: Joi.string().required(),
     termId: Joi.string().required(),
@@ -20,7 +20,7 @@ const validateAssignScoresSchema = (data) => {
   return schema.validate(data);
 };
 
-const validateGetScoresSchema = (data) => {
+const validateGetScoresSchema = (data: any) => {
   const schema = Joi.object({
     subjectId: Joi.string().required(),
     termId: Joi.string().required(),
