@@ -1,33 +1,54 @@
-const Term = require("../models/term.model");
-const Session = require("../models/session.model");
-const {
+import { Request, Response } from "express";
+import Term from "../models/term.model";
+import Session from "../models/session.model";
+import {
   validateSessionSchema,
   validateTermSchema,
   validateToggleScoringSchema,
-} = require("../utils/term.validator");
+} from "../utils/term.validator";
+import { Types } from "mongoose";
+
+// Define interfaces for request bodies
+interface CreateSessionBody {
+  year: string;
+}
+
+interface CreateTermBody {
+  name: string;
+  sessionId: string;
+}
+
+interface ToggleScoringBody {
+  termId: string;
+  isScoringEnabled: boolean;
+}
 
 // Create a new session
-const createSession = async (req, res) => {
+export const createSession = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { error } = validateSessionSchema(req.body);
     if (error) {
-      return res.status(400).json({
+      res.status(400).json({
         status: "error",
         message: error.details[0].message,
         data: null,
       });
+      return;
     }
-    // Extract session year from request body
-    const { year } = req.body;
 
-    // Check if session already exists
+    const { year } = req.body as CreateSessionBody;
+
     const existingSession = await Session.findOne({ year });
     if (existingSession) {
-      return res.status(409).json({
+      res.status(409).json({
         status: "error",
         message: "Session already exists",
         data: null,
       });
+      return;
     }
 
     const session = await Session.create({ year });
@@ -47,29 +68,35 @@ const createSession = async (req, res) => {
 };
 
 // Create a new term and associate it with a session
-const createTerm = async (req, res) => {
+export const createTerm = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { error } = validateTermSchema(req.body);
     if (error) {
-      return res.status(400).json({
+      res.status(400).json({
         status: "error",
         message: error.details[0].message,
         data: null,
       });
+      return;
     }
-    const { name, sessionId } = req.body;
+
+    const { name, sessionId } = req.body as CreateTermBody;
 
     const session = await Session.findById(sessionId);
     if (!session) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "error",
         message: "Session not found",
         data: null,
       });
+      return;
     }
 
     const term = await Term.create({ name, sessionId });
-    session.terms.push(term._id);
+    session.terms.push(term._id as Types.ObjectId);
     await session.save();
 
     res.status(201).json({
@@ -88,25 +115,31 @@ const createTerm = async (req, res) => {
 };
 
 // Enable or disable scoring for a term
-const toggleScoring = async (req, res) => {
+export const toggleScoring = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { error } = validateToggleScoringSchema(req.body);
     if (error) {
-      return res.status(400).json({
+      res.status(400).json({
         status: "error",
         message: error.details[0].message,
         data: null,
       });
+      return;
     }
-    const { termId, isScoringEnabled } = req.body;
+
+    const { termId, isScoringEnabled } = req.body as ToggleScoringBody;
 
     const term = await Term.findById(termId);
     if (!term) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "error",
         message: "Term not found",
         data: null,
       });
+      return;
     }
 
     term.isScoringEnabled = isScoringEnabled;
@@ -127,9 +160,13 @@ const toggleScoring = async (req, res) => {
   }
 };
 
-const getSessions = async (req, res) => {
+// Get all sessions
+export const getSessions = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const sessions = await Session.find().populate("terms"); // Populate terms if needed
+    const sessions = await Session.find().populate("terms");
     res.status(200).json({
       status: "success",
       message: "Sessions retrieved successfully",
@@ -144,6 +181,3 @@ const getSessions = async (req, res) => {
     });
   }
 };
-
-
-module.exports = { createSession, createTerm, toggleScoring, getSessions };
