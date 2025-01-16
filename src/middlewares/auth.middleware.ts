@@ -12,7 +12,7 @@ interface DecodedToken extends JwtPayload {
 const authenticate =
   (roles: string | string[] = []): RequestHandler =>
   (req: Request, res: Response, next: NextFunction): void => {
-    // Ensure roles is an array, even if it's a single role
+    // Ensure roles is an array
     if (typeof roles === "string") {
       roles = [roles];
     }
@@ -37,7 +37,7 @@ const authenticate =
       }
 
       const decoded = jwt.verify(token, secret) as DecodedToken;
-      req.user = decoded; // Attach the decoded token data to the request object
+      req.user = decoded; // Attach the decoded token to the request
 
       // Check for role authorization
       if (roles.length > 0 && !roles.includes(decoded.role)) {
@@ -52,7 +52,6 @@ const authenticate =
       // Proceed to the next middleware or route handler
       next();
     } catch (err) {
-      // Handle token verification errors
       res.status(401).json({
         status: "error",
         message: "Invalid or expired token",
