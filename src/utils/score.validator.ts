@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const validateAssignScoresSchema = (data: any) => {
+export const validateAssignScoresSchema = (data: any) => {
   const schema = Joi.object({
     subjectId: Joi.string().required(),
     termId: Joi.string().required(),
@@ -19,8 +19,7 @@ const validateAssignScoresSchema = (data: any) => {
 
   return schema.validate(data);
 };
-
-const validateGetScoresSchema = (data: any) => {
+export const validateGetScoresSchema = (data: any) => {
   const schema = Joi.object({
     subjectId: Joi.string().required(),
     termId: Joi.string().required(),
@@ -28,5 +27,3 @@ const validateGetScoresSchema = (data: any) => {
 
   return schema.validate(data);
 };
-
-module.exports = { validateAssignScoresSchema, validateGetScoresSchema };
