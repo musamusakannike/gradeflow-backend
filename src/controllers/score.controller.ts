@@ -1,10 +1,33 @@
-const Score = require("../models/score.model"); // Score model
-const Term = require("../models/term.model"); // Term model
-const Subject = require("../models/subject.model"); // Subject model
-const Student = require("../models/student.model"); // Student model
-const { validateAssignScoresSchema, validateGetScoresSchema } = require("../utils/score.validator");
+import { Request, Response } from "express";
+import { ObjectId } from "mongodb";
+import Score from "../models/score.model";
+import Term from "../models/term.model";
+import Subject from "../models/subject.model";
+import Student from "../models/student.model";
+import {
+  validateAssignScoresSchema,
+  validateGetScoresSchema,
+} from "../utils/score.validator";
 
-const assignScores = async (req, res) => {
+// Define interfaces for request bodies and query parameters
+interface AssignScoresBody {
+  subjectId: string;
+  termId: string;
+  scores: Array<{
+    studentId: string;
+    test1?: number;
+    test2?: number;
+    exam?: number;
+  }>;
+}
+
+interface GetScoresQuery {
+  subjectId: string;
+  termId: string;
+}
+
+// Assign scores to students
+export const assignScores = async (req: Request, res: Response): Promise<Response> => {
   try {
     // Validate request body
     const { error } = validateAssignScoresSchema(req.body);
@@ -15,16 +38,24 @@ const assignScores = async (req, res) => {
         data: null,
       });
     }
-    const teacherId = req.user.id; // Authenticated teacher
-    const { subjectId, termId, scores } = req.body;
+
+    const teacherId = req.user?.id; // Authenticated teacher
+    if (!teacherId) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+        data: null,
+      });
+    }
+
+    const { subjectId, termId, scores } = req.body as AssignScoresBody;
 
     // Ensure the subject exists and is assigned to the teacher
-    const subject = await Subject.findOne({ _id: subjectId, teacherId });
+    const subject = await Subject.findOne({ _id: new ObjectId(subjectId), teacherId });
     if (!subject) {
       return res.status(404).json({
         status: "error",
-        message:
-          "Subject not found or you are not authorized to manage this subject",
+        message: "Subject not found or you are not authorized to manage this subject",
         data: null,
       });
     }
@@ -45,9 +76,18 @@ const assignScores = async (req, res) => {
       const { studentId, test1, test2, exam } = scoreData;
 
       // Find existing score record or create a new one
-      let score = await Score.findOne({ studentId, subjectId, termId });
+      let score = await Score.findOne({
+        studentId: new ObjectId(studentId),
+        subjectId: new ObjectId(subjectId),
+        termId: new ObjectId(termId),
+      });
+
       if (!score) {
-        score = new Score({ studentId, subjectId, termId });
+        score = new Score({
+          studentId: new ObjectId(studentId),
+          subjectId: new ObjectId(subjectId),
+          termId: new ObjectId(termId),
+        });
       }
 
       // Update only the fields that are provided
@@ -59,14 +99,14 @@ const assignScores = async (req, res) => {
       savedScores.push(score);
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       status: "success",
       message: "Scores assigned successfully",
       data: savedScores,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       message: "Internal server error",
       data: null,
@@ -75,7 +115,10 @@ const assignScores = async (req, res) => {
 };
 
 // Retrieve scores for a specific term and subject
-const getScoresForTermAndSubject = async (req, res) => {
+export const getScoresForTermAndSubject = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
   try {
     // Validate request query parameters
     const { error } = validateGetScoresSchema(req.query);
@@ -86,38 +129,47 @@ const getScoresForTermAndSubject = async (req, res) => {
         data: null,
       });
     }
-    const teacherId = req.user.id; // Authenticated teacher
-    const { subjectId, termId } = req.query;
+
+    const teacherId = req.user?.id; // Authenticated teacher
+    if (!teacherId) {
+      return res.status(401).json({
+        status: "error",
+        message: "Unauthorized",
+        data: null,
+      });
+    }
+
+    const { subjectId, termId } = req.query as unknown as GetScoresQuery;
 
     // Ensure the subject exists and is assigned to the teacher
-    const subject = await Subject.findOne({ _id: subjectId, teacherId });
+    const subject = await Subject.findOne({ _id: new ObjectId(subjectId), teacherId });
     if (!subject) {
       return res.status(404).json({
         status: "error",
-        message:
-          "Subject not found or you are not authorized to manage this subject",
+        message: "Subject not found or you are not authorized to manage this subject",
         data: null,
       });
     }
 
     // Retrieve scores for the specific term and subject
-    const scores = await Score.find({ subjectId, termId })
+    const scores = await Score.find({
+      subjectId: new ObjectId(subjectId),
+      termId: new ObjectId(termId),
+    })
       .populate("studentId", "fullName email studentId") // Populate student details
       .select("studentId test1 test2 exam"); // Select specific fields
 
-    res.status(200).json({
+    return res.status(200).json({
       status: "success",
       message: "Scores retrieved successfully",
       data: scores,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       message: "Internal server error",
       data: null,
     });
   }
 };
-
-module.exports = { assignScores, getScoresForTermAndSubject };
