@@ -1,9 +1,6 @@
 import express, { Router } from "express";
-import {
-  assignScores,
-  getScoresForTermAndSubject,
-} from "../controllers/score.controller";
 import { authenticate } from "../middlewares/auth.middleware";
+import { assignScores, getScoresForTermAndSubject } from "../controllers/score.controller";
 
 const router: Router = express.Router();
 
