@@ -1,7 +1,18 @@
-const Student = require("../models/student.model");
+import { Request, Response } from "express";
+import Student from "../models/student.model";
+
+interface CustomRequest extends Request {
+  user?: {
+    id: string;
+    role: string;
+  };
+}
 
 // Update student details
-const updateStudent = async (req, res) => {
+export const updateStudent = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
   try {
     const { studentId } = req.params; // Get student ID from route params
     const { fullName, email, password, classId } = req.body; // Get updated fields from request body
@@ -9,11 +20,12 @@ const updateStudent = async (req, res) => {
     // Find the student by studentId
     const student = await Student.findOne({ _id: studentId });
     if (!student) {
-      return res.status(404).json({
+      res.status(404).json({
         status: "error",
         message: "Student not found",
         data: null,
       });
+      return;
     }
 
     // Update fields if provided in the request
@@ -39,5 +51,3 @@ const updateStudent = async (req, res) => {
     });
   }
 };
-
-module.exports = { updateStudent };
