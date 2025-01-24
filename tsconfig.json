@@ -30,6 +30,9 @@
     "sourceMap": true, // Generate source maps for debugging
     "typeRoots": ["./node_modules/@types", "./src/types"],
   },
-  "include": ["server.ts", "src/**/*.ts"], // Include all TypeScript files in the `src` directory
+  "include": [
+    "/server.ts", // Include the server entry point
+    "src/**/*"                 // Include all files in the src folder
+  ],
   "exclude": ["node_modules", "dist"] // Exclude `node_modules` and `dist` directories
 }
