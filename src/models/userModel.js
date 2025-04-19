@@ -1,7 +1,8 @@
 import mongoose from "mongoose"
 import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-import { ROLES } from "../config/roles.js"
+import jwt from "jsonwebtoken";
+import { ROLES } from "../config/roles.js";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -76,10 +77,13 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 // Generate and hash password token
 userSchema.methods.getResetPasswordToken = function () {
   // Generate token
-  const resetToken = crypto.randomBytes(20).toString("hex")
+  const resetToken = crypto.randomUUID()
 
   // Hash token and set to resetPasswordToken field
-  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex")
 
   // Set expire
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000
