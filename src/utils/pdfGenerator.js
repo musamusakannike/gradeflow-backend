@@ -14,7 +14,7 @@ import moment from "moment"
  * @returns {Promise<Buffer>} - PDF document as buffer
  */
 export const generateResultPDF = async (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       // Create a PDF document
       const doc = new PDFTable({ margin: 30, size: "A4" })
@@ -206,7 +206,7 @@ export const generateResultPDF = async (data) => {
  * @returns {Promise<Buffer>} - PDF document as buffer
  */
 export const generateAttendancePDF = async (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       // Create a PDF document
       const doc = new PDFTable({ margin: 30, size: "A4" })
@@ -399,7 +399,7 @@ export const generateAttendancePDF = async (data) => {
  * @returns {Promise<Buffer>} - PDF document as buffer
  */
 export const generateClassResultPDF = async (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       // Create a PDF document
       const doc = new PDFTable({ margin: 30, size: "A4", layout: "landscape" })
@@ -533,7 +533,7 @@ export const generateClassResultPDF = async (data) => {
  * @returns {Promise<Buffer>} - PDF document as buffer
  */
 export const generateClassAttendancePDF = async (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       // Create a PDF document
       const doc = new PDFTable({ margin: 30, size: "A4" })
