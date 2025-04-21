@@ -124,7 +124,20 @@ export const updateSchool = asyncHandler(async (req, res, next) => {
     return next(new AppError(`User ${req.user.id} is not authorized to update this school`, 403))
   }
 
-  school = await School.findByIdAndUpdate(req.params.id, req.body, {
+  // Merge existing data with updates
+  const updateFields = {
+    name: req.body.name || school.name,
+    address: req.body.address || school.address,
+    city: req.body.city || school.city,
+    state: req.body.state || school.state,
+    country: req.body.country || school.country,
+    phoneNumber: req.body.phoneNumber || school.phoneNumber,
+    email: req.body.email || school.email,
+    website: req.body.website || school.website,
+    logo: req.body.logo !== undefined ? req.body.logo : school.logo
+  }
+
+  school = await School.findByIdAndUpdate(req.params.id, updateFields, {
     new: true,
     runValidators: true,
   })
@@ -145,7 +158,7 @@ export const deleteSchool = asyncHandler(async (req, res, next) => {
     return next(new AppError(`School not found with id of ${req.params.id}`, 404))
   }
 
-  await school.remove()
+  await School.deleteOne({ _id: school._id })
 
   res.status(200).json({
     success: true,

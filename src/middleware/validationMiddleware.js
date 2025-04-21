@@ -179,4 +179,62 @@ export const resetPasswordValidation = [
     .withMessage('Password is required')
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long')
-] 
+]
+
+export const schoolValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('School name is required')
+    .isLength({ max: 100 })
+    .withMessage('School name cannot be more than 100 characters'),
+  
+  body('address')
+    .trim()
+    .notEmpty()
+    .withMessage('Address is required'),
+  
+  body('city')
+    .trim()
+    .notEmpty()
+    .withMessage('City is required'),
+  
+  body('state')
+    .trim()
+    .notEmpty()
+    .withMessage('State is required'),
+  
+  body('country')
+    .trim()
+    .notEmpty()
+    .withMessage('Country is required'),
+  
+  body('phoneNumber')
+    .trim()
+    .notEmpty()
+    .withMessage('Phone number is required'),
+  
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Please provide a valid email'),
+  
+  body('website')
+    .optional()
+    .trim()
+    .isURL()
+    .withMessage('Please provide a valid website URL'),
+  
+  body('logo')
+    .optional()
+    .trim()
+    .isURL()
+    .withMessage('Please provide a valid logo URL'),
+  
+  body('isActive')
+    .optional()
+    .isBoolean()
+    .withMessage('isActive must be a boolean value')
+]
