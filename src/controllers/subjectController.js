@@ -148,7 +148,7 @@ export const deleteSubject = asyncHandler(async (req, res, next) => {
     return next(new AppError(`User ${req.user.id} is not authorized to delete this subject`, 403))
   }
 
-  await subject.remove()
+  await subject.deleteOne()
 
   res.status(200).json({
     success: true,

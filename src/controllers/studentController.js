@@ -180,7 +180,7 @@ export const deleteStudent = asyncHandler(async (req, res, next) => {
   await User.findByIdAndDelete(student.user)
 
   // Delete student
-  await student.remove()
+  await student.deleteOne()
 
   res.status(200).json({
     success: true,

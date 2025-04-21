@@ -168,7 +168,7 @@ export const deleteFee = asyncHandler(async (req, res, next) => {
     return next(new AppError(`User ${req.user.id} is not authorized to delete fees`, 403))
   }
 
-  await fee.remove()
+  await fee.deleteOne()
 
   res.status(200).json({
     success: true,

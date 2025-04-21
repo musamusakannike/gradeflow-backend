@@ -130,7 +130,7 @@ export const deleteClass = asyncHandler(async (req, res, next) => {
     return next(new AppError(`User ${req.user.id} is not authorized to delete this class`, 403))
   }
 
-  await cls.remove()
+  await cls.deleteOne()
 
   res.status(200).json({
     success: true,

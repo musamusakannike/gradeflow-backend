@@ -528,7 +528,7 @@ export const deleteAttendance = asyncHandler(async (req, res, next) => {
     }
   }
 
-  await attendance.remove()
+  await attendance.deleteOne()
 
   res.status(200).json({
     success: true,

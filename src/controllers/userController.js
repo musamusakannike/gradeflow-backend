@@ -105,7 +105,7 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
     return next(new AppError(`User ${req.user.id} is not authorized to delete this user`, 403))
   }
 
-  await user.remove()
+  await user.deleteOne()
 
   res.status(200).json({
     success: true,

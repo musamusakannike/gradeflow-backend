@@ -124,7 +124,7 @@ export const deleteAcademicSession = asyncHandler(async (req, res, next) => {
   // Delete all terms associated with this session
   await Term.deleteMany({ academicSession: session._id })
 
-  await session.remove()
+  await session.deleteOne()
 
   res.status(200).json({
     success: true,

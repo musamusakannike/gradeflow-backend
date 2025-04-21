@@ -216,7 +216,7 @@ export const deleteParent = asyncHandler(async (req, res, next) => {
   await User.findByIdAndDelete(parent.user)
 
   // Delete parent
-  await parent.remove()
+  await parent.deleteOne()
 
   res.status(200).json({
     success: true,
