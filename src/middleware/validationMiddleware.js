@@ -305,3 +305,58 @@ export const userUpdateValidation = [
     .optional()
     .trim()
 ]
+
+export const updateSchoolValidation = [
+  body('schoolName')
+    .optional()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('School name must be between 2 and 100 characters'),
+  body('address')
+    .optional()
+    .notEmpty()
+    .withMessage('Address is required'),
+  body('city')
+    .optional()
+    .notEmpty()
+    .withMessage('City is required'),
+  body('state')
+    .optional()
+    .notEmpty()
+    .withMessage('State is required'),
+  body('country')
+    .optional()
+    .notEmpty()
+    .withMessage('Country is required'),
+  body('phoneNumber')
+    .optional()
+    .notEmpty()
+    .withMessage('Phone number is required'),
+  body('email')
+    .optional()
+    .isEmail()
+    .withMessage('Please provide a valid email'),
+  body('website')
+    .optional(),
+  body('logo')
+    .optional(),
+  body('adminFirstName')
+    .optional()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Admin first name must be between 2 and 50 characters'),
+  body('adminLastName')
+    .optional()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Admin last name must be between 2 and 50 characters'),
+  body('adminEmail')
+    .optional()
+    .isEmail()
+    .withMessage('Please provide a valid admin email'),
+  body('adminPassword')
+    .optional()
+    .isLength({ min: 6 })
+    .withMessage('Admin password must be at least 6 characters long'),
+  body('isActive')
+    .optional()
+    .isBoolean()
+    .withMessage('isActive must be a boolean'),
+];

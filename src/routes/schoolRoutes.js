@@ -15,6 +15,7 @@ import { ROLES, PERMISSIONS } from "../config/roles.js";
 import {
   validate,
   registerSchoolValidation,
+  updateSchoolValidation,
 } from "../middleware/validationMiddleware.js";
 
 const router = express.Router();
@@ -37,7 +38,7 @@ router
     protect,
     authorize(ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN),
     hasPermission(PERMISSIONS.MANAGE_SCHOOL),
-    validate(registerSchoolValidation),
+    validate(updateSchoolValidation),
     updateSchool
   )
   .delete(
