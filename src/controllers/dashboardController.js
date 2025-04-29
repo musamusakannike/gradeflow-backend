@@ -11,6 +11,7 @@ import mongoose from "mongoose"
 import User from "../models/userModel.js"
 import Class from "../models/classModel.js"
 import Subject from "../models/subjectModel.js"
+import School from "../models/schoolModel.js" // Add School import
 
 // @desc    Get parent dashboard data
 // @route   GET /api/dashboard/parent
@@ -314,3 +315,73 @@ export const getChildrenComparison = asyncHandler(async (req, res, next) => {
     data: childrenPerformance,
   })
 })
+
+// @desc    Get super admin dashboard data
+// @route   GET /api/dashboard/super-admin
+// @access  Private/SuperAdmin
+export const getSuperAdminDashboard = asyncHandler(async (req, res, next) => {
+  try {
+    // 1. Total schools
+    const totalSchools = await School.countDocuments();
+
+    // 2. Total users
+    const totalUsers = await User.countDocuments();
+
+    // 3. Total active schools
+    const totalActiveSchools = await School.countDocuments({ isActive: true });
+
+    // 4. New registrations in the last month (schools)
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const newSchoolRegistrations = await School.countDocuments({ createdAt: { $gte: oneMonthAgo } });
+
+    // 5. User roles distribution
+    const userRolesAgg = await User.aggregate([
+      { $group: { _id: "$role", count: { $sum: 1 } } },
+    ]);
+    const userRolesDistribution = {};
+    userRolesAgg.forEach(role => {
+      userRolesDistribution[role._id] = role.count;
+    });
+
+    // 6. Monthly school growth (last 12 months)
+    const now = new Date();
+    const lastYear = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+    const monthlyGrowthAgg = await School.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $group: {
+          _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } },
+    ]);
+    // Format for frontend
+    const monthlySchoolGrowth = Array.from({ length: 12 }, (_, i) => {
+      const date = new Date(now.getFullYear(), now.getMonth() - 11 + i, 1);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const found = monthlyGrowthAgg.find(item => item._id.year === year && item._id.month === month);
+      return {
+        year,
+        month,
+        count: found ? found.count : 0,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalSchools,
+        totalUsers,
+        totalActiveSchools,
+        newSchoolRegistrations,
+        userRolesDistribution,
+        monthlySchoolGrowth,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
