@@ -46,7 +46,7 @@ export const getSchool = asyncHandler(async (req, res, next) => {
 // @access  Private/SuperAdmin
 export const createSchool = asyncHandler(async (req, res, next) => {
   const {
-    name,
+    schoolName,
     address,
     city,
     state,
@@ -61,7 +61,7 @@ export const createSchool = asyncHandler(async (req, res, next) => {
   } = req.body
 
   // Check if school already exists
-  const schoolExists = await School.findOne({ name })
+  const schoolExists = await School.findOne({ name: schoolName, email })
 
   if (schoolExists) {
     return next(new AppError("School already exists", 400))
@@ -76,7 +76,7 @@ export const createSchool = asyncHandler(async (req, res, next) => {
 
   // Create school
   const school = await School.create({
-    name,
+    name: schoolName,
     address,
     city,
     state,

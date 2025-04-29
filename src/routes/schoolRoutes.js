@@ -1,10 +1,23 @@
-import express from "express"
-import { getSchools, getSchool, createSchool, updateSchool, deleteSchool } from "../controllers/schoolController.js"
-import { protect, authorize, hasPermission } from "../middleware/authMiddleware.js"
-import { ROLES, PERMISSIONS } from "../config/roles.js"
-import { validate, schoolValidation } from "../middleware/validationMiddleware.js"
+import express from "express";
+import {
+  getSchools,
+  getSchool,
+  createSchool,
+  updateSchool,
+  deleteSchool,
+} from "../controllers/schoolController.js";
+import {
+  protect,
+  authorize,
+  hasPermission,
+} from "../middleware/authMiddleware.js";
+import { ROLES, PERMISSIONS } from "../config/roles.js";
+import {
+  validate,
+  registerSchoolValidation,
+} from "../middleware/validationMiddleware.js";
 
-const router = express.Router()
+const router = express.Router();
 
 router
   .route("/")
@@ -13,9 +26,9 @@ router
     protect,
     authorize(ROLES.SUPER_ADMIN),
     hasPermission(PERMISSIONS.CREATE_SCHOOL),
-    validate(schoolValidation),
+    validate(registerSchoolValidation),
     createSchool
-  )
+  );
 
 router
   .route("/:id")
@@ -24,8 +37,14 @@ router
     protect,
     authorize(ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN),
     hasPermission(PERMISSIONS.MANAGE_SCHOOL),
+    validate(registerSchoolValidation),
     updateSchool
   )
-  .delete(protect, authorize(ROLES.SUPER_ADMIN), hasPermission(PERMISSIONS.MANAGE_SCHOOL), deleteSchool)
+  .delete(
+    protect,
+    authorize(ROLES.SUPER_ADMIN),
+    hasPermission(PERMISSIONS.MANAGE_SCHOOL),
+    deleteSchool
+  );
 
-export default router
+export default router;
