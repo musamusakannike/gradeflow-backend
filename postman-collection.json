@@ -1,0 +1,2950 @@
+{
+  "info": {
+    "name": "GradeFlow API",
+    "description": "A comprehensive collection for the GradeFlow School Management System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "description": "Endpoints for user authentication and account management",
+      "item": [
+        {
+          "name": "Register Super Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register-super-admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register-super-admin"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Register a super admin user"
+          }
+        },
+        {
+          "name": "Register School",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register-school",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register-school"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schoolName\": \"Example School\",\n  \"address\": \"123 School Street\",\n  \"city\": \"Lagos\",\n  \"state\": \"Lagos State\",\n  \"country\": \"Nigeria\",\n  \"phoneNumber\": \"+2341234567890\",\n  \"email\": \"school@example.com\",\n  \"website\": \"https://school.example.com\",\n  \"adminFirstName\": \"Jane\",\n  \"adminLastName\": \"Smith\",\n  \"adminEmail\": \"jane@example.com\",\n  \"adminPassword\": \"password123\"\n}"
+            },
+            "description": "Register a new school and school admin"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Login a user"
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get the currently logged in user"
+          }
+        },
+        {
+          "name": "Update User Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/updatedetails",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "updatedetails"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Name\",\n  \"email\": \"updated@example.com\",\n  \"phoneNumber\": \"+2349876543210\"\n}"
+            },
+            "description": "Update user details"
+          }
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/updatepassword",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "updatepassword"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "description": "Update user password"
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgotpassword",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "forgotpassword"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "description": "Send password reset email"
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/resetpassword/:resettoken",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "resetpassword", ":resettoken"],
+              "variable": [
+                {
+                  "key": "resettoken",
+                  "value": "your-reset-token-here"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"newpassword123\"\n}"
+            },
+            "description": "Reset password using token"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. School Management",
+      "description": "Endpoints for managing schools",
+      "item": [
+        {
+          "name": "Get All Schools",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schools",
+              "host": ["{{baseUrl}}"],
+              "path": ["schools"]
+            },
+            "description": "Get all schools (SuperAdmin only)"
+          }
+        },
+        {
+          "name": "Get Single School",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schools/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["schools", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "description": "Get a single school by ID"
+          }
+        },
+        {
+          "name": "Create School",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schools",
+              "host": ["{{baseUrl}}"],
+              "path": ["schools"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New School\",\n  \"address\": \"456 School Avenue\",\n  \"city\": \"Abuja\",\n  \"state\": \"FCT\",\n  \"country\": \"Nigeria\",\n  \"phoneNumber\": \"+2341234567891\",\n  \"email\": \"newschool@example.com\",\n  \"website\": \"https://newschool.example.com\",\n  \"adminFirstName\": \"Admin\",\n  \"adminLastName\": \"User\",\n  \"adminEmail\": \"admin@newschool.com\",\n  \"adminPassword\": \"password123\"\n}"
+            },
+            "description": "Create a new school (SuperAdmin only)"
+          }
+        },
+        {
+          "name": "Update School",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schools/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["schools", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated School Name\",\n  \"phoneNumber\": \"+2341234567892\",\n  \"email\": \"updated@example.com\"\n}"
+            },
+            "description": "Update a school"
+          }
+        },
+        {
+          "name": "Delete School",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/schools/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["schools", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "description": "Delete a school (SuperAdmin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. User Management",
+      "description": "Endpoints for managing users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "description": "Get all users (SuperAdmin/SchoolAdmin only)"
+          }
+        },
+        {
+          "name": "Get Single User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109cd"
+                }
+              ]
+            },
+            "description": "Get a single user by ID"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"New\",\n  \"lastName\": \"Teacher\",\n  \"email\": \"teacher@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"teacher\",\n  \"phoneNumber\": \"+2341234567893\"\n}"
+            },
+            "description": "Create a new user (SuperAdmin/SchoolAdmin only)"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109cf"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Teacher\",\n  \"phoneNumber\": \"+2341234567894\"\n}"
+            },
+            "description": "Update a user"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109cf"
+                }
+              ]
+            },
+            "description": "Delete a user (SuperAdmin/SchoolAdmin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Academic Management",
+      "description": "Endpoints for managing academic sessions and terms",
+      "item": [
+        {
+          "name": "Get Academic Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/sessions/:schoolId",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "sessions", ":schoolId"],
+              "variable": [
+                {
+                  "key": "schoolId",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "description": "Get all academic sessions for a school"
+          }
+        },
+        {
+          "name": "Get Single Academic Session",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/sessions/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "sessions", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d0"
+                }
+              ]
+            },
+            "description": "Get a single academic session by ID"
+          }
+        },
+        {
+          "name": "Create Academic Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/sessions",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "sessions"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2023/2024\",\n  \"startDate\": \"2023-09-01\",\n  \"endDate\": \"2024-07-31\"\n}"
+            },
+            "description": "Create a new academic session"
+          }
+        },
+        {
+          "name": "Update Academic Session",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/sessions/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "sessions", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d1"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated 2023/2024\",\n  \"endDate\": \"2024-08-15\"\n}"
+            },
+            "description": "Update an academic session"
+          }
+        },
+        {
+          "name": "Delete Academic Session",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/sessions/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "sessions", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d1"
+                }
+              ]
+            },
+            "description": "Delete an academic session"
+          }
+        },
+        {
+          "name": "Get Terms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/terms/:sessionId",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "terms", ":sessionId"],
+              "variable": [
+                {
+                  "key": "sessionId",
+                  "value": "60d0fe4f5311236168a109d0"
+                }
+              ]
+            },
+            "description": "Get all terms for an academic session"
+          }
+        },
+        {
+          "name": "Get Single Term",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/terms/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "terms", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Get a single term by ID"
+          }
+        },
+        {
+          "name": "Update Term",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/terms/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "terms", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startDate\": \"2022-09-05\",\n  \"endDate\": \"2022-12-20\"\n}"
+            },
+            "description": "Update a term"
+          }
+        },
+        {
+          "name": "Activate Term",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/academic/terms/:id/activate",
+              "host": ["{{baseUrl}}"],
+              "path": ["academic", "terms", ":id", "activate"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d3"
+                }
+              ]
+            },
+            "description": "Set a term as active"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Class Management",
+      "description": "Endpoints for managing classes",
+      "item": [
+        {
+          "name": "Get All Classes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/classes/:schoolId",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes", ":schoolId"],
+              "variable": [
+                {
+                  "key": "schoolId",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "description": "Get all classes for a school"
+          }
+        },
+        {
+          "name": "Get Single Class",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/classes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d5"
+                }
+              ]
+            },
+            "description": "Get a single class by ID"
+          }
+        },
+        {
+          "name": "Create Class",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/classes",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"JSS 2A\",\n  \"classTeacher\": \"60d0fe4f5311236168a109cd\",\n  \"academicSession\": \"60d0fe4f5311236168a109d0\"\n}"
+            },
+            "description": "Create a new class"
+          }
+        },
+        {
+          "name": "Update Class",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/classes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d7"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"JSS 2B\",\n  \"classTeacher\": \"60d0fe4f5311236168a109cf\"\n}"
+            },
+            "description": "Update a class"
+          }
+        },
+        {
+          "name": "Delete Class",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/classes/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d7"
+                }
+              ]
+            },
+            "description": "Delete a class"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Subject Management",
+      "description": "Endpoints for managing subjects",
+      "item": [
+        {
+          "name": "Get Subjects by Class",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/class/:classId",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", "class", ":classId"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                }
+              ]
+            },
+            "description": "Get all subjects for a class"
+          }
+        },
+        {
+          "name": "Get Subjects by Teacher",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/teacher/:teacherId",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", "teacher", ":teacherId"],
+              "variable": [
+                {
+                  "key": "teacherId",
+                  "value": "60d0fe4f5311236168a109cd"
+                }
+              ]
+            },
+            "description": "Get all subjects taught by a teacher"
+          }
+        },
+        {
+          "name": "Get Single Subject",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109d8"
+                }
+              ]
+            },
+            "description": "Get a single subject by ID"
+          }
+        },
+        {
+          "name": "Create Subject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Physics\",\n  \"code\": \"PHY101\",\n  \"teacher\": \"60d0fe4f5311236168a109cd\",\n  \"class\": \"60d0fe4f5311236168a109d5\",\n  \"obtainableScores\": {\n    \"test1\": 30,\n    \"test2\": 30,\n    \"exam\": 40\n  }\n}"
+            },
+            "description": "Create a new subject"
+          }
+        },
+        {
+          "name": "Update Subject",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109da"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Advanced Physics\",\n  \"teacher\": \"60d0fe4f5311236168a109cf\"\n}"
+            },
+            "description": "Update a subject"
+          }
+        },
+        {
+          "name": "Delete Subject",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109da"
+                }
+              ]
+            },
+            "description": "Delete a subject"
+          }
+        },
+        {
+          "name": "Toggle Student Addition",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id/toggle-student-addition",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id", "toggle-student-addition"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109da"
+                }
+              ]
+            },
+            "description": "Toggle whether students can add themselves to this subject"
+          }
+        },
+        {
+          "name": "Update Obtainable Scores",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id/obtainable-scores",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id", "obtainable-scores"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109da"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"obtainableScores\": {\n    \"test1\": 20,\n    \"test2\": 20,\n    \"exam\": 60\n  }\n}"
+            },
+            "description": "Update the obtainable scores for a subject"
+          }
+        },
+        {
+          "name": "Add Student to Subject",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id/add-student/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id", "add-student", ":studentId"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109da"
+                },
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Add a student to a subject"
+          }
+        },
+        {
+          "name": "Remove Student from Subject",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/:id/remove-student/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", ":id", "remove-student", ":studentId"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109da"
+                },
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Remove a student from a subject"
+          }
+        },
+        {
+          "name": "Get Subjects by Student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/student/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", "student", ":studentId"],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Get all subjects for a student"
+          }
+        },
+        {
+          "name": "Get Available Subjects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subjects/available/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["subjects", "available", ":studentId"],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Get all available subjects that a student can register for"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Student Management",
+      "description": "Endpoints for managing students",
+      "item": [
+        {
+          "name": "Get Students by School",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/school/:schoolId",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", "school", ":schoolId"],
+              "variable": [
+                {
+                  "key": "schoolId",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "description": "Get all students for a school"
+          }
+        },
+        {
+          "name": "Get Students by Class",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/class/:classId",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", "class", ":classId"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                }
+              ]
+            },
+            "description": "Get all students for a class"
+          }
+        },
+        {
+          "name": "Get Single Student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Get a single student by ID"
+          }
+        },
+        {
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": ["{{baseUrl}}"],
+              "path": ["students"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Student\",\n  \"lastName\": \"Three\",\n  \"email\": \"student3@example.com\",\n  \"password\": \"password123\",\n  \"class\": \"60d0fe4f5311236168a109d5\",\n  \"dateOfBirth\": \"2005-08-20\",\n  \"gender\": \"Female\",\n  \"address\": \"456 Student Avenue, Lagos\",\n  \"parentName\": \"Parent Three\",\n  \"parentPhone\": \"+2341234567896\",\n  \"parentEmail\": \"parent3@example.com\"\n}"
+            },
+            "description": "Create a new student"
+          }
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109dd"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Student\",\n  \"address\": \"789 Updated Street, Lagos\"\n}"
+            },
+            "description": "Update a student"
+          }
+        },
+        {
+          "name": "Delete Student",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109dd"
+                }
+              ]
+            },
+            "description": "Delete a student"
+          }
+        },
+        {
+          "name": "Update Student Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:id/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Graduated\"\n}"
+            },
+            "description": "Update a student's status"
+          }
+        },
+        {
+          "name": "Get Student Parents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:id/parents",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", ":id", "parents"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Get all parents of a student"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Parent Management",
+      "description": "Endpoints for managing parents",
+      "item": [
+        {
+          "name": "Get Parents by School",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/school/:schoolId",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", "school", ":schoolId"],
+              "variable": [
+                {
+                  "key": "schoolId",
+                  "value": "60d0fe4f5311236168a109cc"
+                }
+              ]
+            },
+            "description": "Get all parents for a school"
+          }
+        },
+        {
+          "name": "Get Single Parent",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e0"
+                }
+              ]
+            },
+            "description": "Get a single parent by ID"
+          }
+        },
+        {
+          "name": "Create Parent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Parent\",\n  \"lastName\": \"Three\",\n  \"email\": \"parent3@example.com\",\n  \"password\": \"password123\",\n  \"phoneNumber\": \"+2341234567898\",\n  \"children\": [\"60d0fe4f5311236168a109dd\"],\n  \"occupation\": \"Doctor\",\n  \"address\": \"789 Parent Avenue, Lagos\",\n  \"alternatePhone\": \"+2341234567899\",\n  \"relationship\": \"Mother\"\n}"
+            },
+            "description": "Create a new parent"
+          }
+        },
+        {
+          "name": "Update Parent",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e2"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Parent\",\n  \"occupation\": \"Professor\",\n  \"address\": \"101 Updated Avenue, Lagos\"\n}"
+            },
+            "description": "Update a parent"
+          }
+        },
+        {
+          "name": "Delete Parent",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e2"
+                }
+              ]
+            },
+            "description": "Delete a parent"
+          }
+        },
+        {
+          "name": "Add Child to Parent",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/:id/add-child/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", ":id", "add-child", ":studentId"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e0"
+                },
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109dc"
+                }
+              ]
+            },
+            "description": "Add a child to a parent"
+          }
+        },
+        {
+          "name": "Remove Child from Parent",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/:id/remove-child/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", ":id", "remove-child", ":studentId"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e0"
+                },
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109dc"
+                }
+              ]
+            },
+            "description": "Remove a child from a parent"
+          }
+        },
+        {
+          "name": "Get Parent Children",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/:id/children",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", ":id", "children"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e0"
+                }
+              ]
+            },
+            "description": "Get all children of a parent"
+          }
+        },
+        {
+          "name": "Get Parent by User ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/parents/user/:userId",
+              "host": ["{{baseUrl}}"],
+              "path": ["parents", "user", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "60d0fe4f5311236168a109e4"
+                }
+              ]
+            },
+            "description": "Get a parent by user ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Result Management",
+      "description": "Endpoints for managing student results",
+      "item": [
+        {
+          "name": "Get Results by Term and Class",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/term/:termId/class/:classId",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", "term", ":termId", "class", ":classId"],
+              "variable": [
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                },
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                }
+              ]
+            },
+            "description": "Get all results for a term and class"
+          }
+        },
+        {
+          "name": "Get Student Result",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/student/:studentId/term/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", "student", ":studentId", "term", ":termId"],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Get a student's result for a term"
+          }
+        },
+        {
+          "name": "Create or Update Score",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/scores",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", "scores"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student\": \"60d0fe4f5311236168a109db\",\n  \"subject\": \"60d0fe4f5311236168a109d8\",\n  \"term\": \"60d0fe4f5311236168a109d2\",\n  \"test1\": 27,\n  \"test2\": 29,\n  \"exam\": 38\n}"
+            },
+            "description": "Create or update a score for a student"
+          }
+        },
+        {
+          "name": "Compile Results",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/compile/:classId/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", "compile", ":classId", ":termId"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Compile results for a class and term"
+          }
+        },
+        {
+          "name": "Add Remarks",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/:id/remarks",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", ":id", "remarks"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e5"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"classTeacherRemark\": \"Outstanding performance. Keep it up!\",\n  \"principalRemark\": \"Excellent result. Very proud of you.\"\n}"
+            },
+            "description": "Add remarks to a result"
+          }
+        },
+        {
+          "name": "Publish Results",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/publish/:classId/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", "publish", ":classId", ":termId"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Publish results for a class and term"
+          }
+        },
+        {
+          "name": "Toggle Term Scoring",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/results/toggle-scoring/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["results", "toggle-scoring", ":termId"],
+              "variable": [
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Toggle whether scoring is allowed for a term"
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Fee Management",
+      "description": "Endpoints for managing student fees",
+      "item": [
+        {
+          "name": "Get Fees by Term",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees/term/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees", "term", ":termId"],
+              "variable": [
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Get all fees for a term"
+          }
+        },
+        {
+          "name": "Get Fees by Student",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees/student/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees", "student", ":studentId"],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Get all fees for a student"
+          }
+        },
+        {
+          "name": "Get Single Fee",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109e9"
+                }
+              ]
+            },
+            "description": "Get a single fee by ID"
+          }
+        },
+        {
+          "name": "Create Fee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student\": \"60d0fe4f5311236168a109dd\",\n  \"term\": \"60d0fe4f5311236168a109d2\",\n  \"amount\": 50000\n}"
+            },
+            "description": "Create a new fee"
+          }
+        },
+        {
+          "name": "Update Fee",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109ec"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 55000\n}"
+            },
+            "description": "Update a fee"
+          }
+        },
+        {
+          "name": "Delete Fee",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109ec"
+                }
+              ]
+            },
+            "description": "Delete a fee"
+          }
+        },
+        {
+          "name": "Update Fee Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fees/:id/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["fees", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109ec"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Paid\",\n  \"paidAmount\": 55000,\n  \"paymentMethod\": \"Online Payment\",\n  \"reference\": \"ONL123456\"\n}"
+            },
+            "description": "Update a fee's status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Attendance Management",
+      "description": "Endpoints for managing student attendance",
+      "item": [
+        {
+          "name": "Mark Attendance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance",
+              "host": ["{{baseUrl}}"],
+              "path": ["attendance"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student\": \"60d0fe4f5311236168a109db\",\n  \"date\": \"2022-09-15\",\n  \"status\": \"Present\",\n  \"term\": \"60d0fe4f5311236168a109d2\",\n  \"remark\": \"Arrived on time\"\n}"
+            },
+            "description": "Mark attendance for a student"
+          }
+        },
+        {
+          "name": "Mark Bulk Attendance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/bulk",
+              "host": ["{{baseUrl}}"],
+              "path": ["attendance", "bulk"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"classId\": \"60d0fe4f5311236168a109d5\",\n  \"date\": \"2022-09-16\",\n  \"term\": \"60d0fe4f5311236168a109d2\",\n  \"attendanceData\": [\n    {\n      \"student\": \"60d0fe4f5311236168a109db\",\n      \"status\": \"Present\",\n      \"remark\": \"Arrived on time\"\n    },\n    {\n      \"student\": \"60d0fe4f5311236168a109dc\",\n      \"status\": \"Absent\",\n      \"remark\": \"Sick leave\"\n    }\n  ]\n}"
+            },
+            "description": "Mark attendance for multiple students"
+          }
+        },
+        {
+          "name": "Get Class Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/class/:classId/date/:date",
+              "host": ["{{baseUrl}}"],
+              "path": ["attendance", "class", ":classId", "date", ":date"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                },
+                {
+                  "key": "date",
+                  "value": "2022-09-16"
+                }
+              ]
+            },
+            "description": "Get attendance for a class on a specific date"
+          }
+        },
+        {
+          "name": "Get Student Term Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/student/:studentId/term/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "attendance",
+                "student",
+                ":studentId",
+                "term",
+                ":termId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Get attendance for a student in a term"
+          }
+        },
+        {
+          "name": "Get Class Attendance Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/report/class/:classId/term/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "attendance",
+                "report",
+                "class",
+                ":classId",
+                "term",
+                ":termId"
+              ],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Get attendance report for a class in a term"
+          }
+        },
+        {
+          "name": "Delete Attendance",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["attendance", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109ed"
+                }
+              ]
+            },
+            "description": "Delete an attendance record"
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Report Generation",
+      "description": "Endpoints for generating reports",
+      "item": [
+        {
+          "name": "Generate Student Result Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/student/:studentId/result/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "student", ":studentId", "result", ":termId"],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Generate a PDF report of a student's result for a term"
+          }
+        },
+        {
+          "name": "Generate Student Attendance Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/student/:studentId/attendance/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "reports",
+                "student",
+                ":studentId",
+                "attendance",
+                ":termId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Generate a PDF report of a student's attendance for a term"
+          }
+        },
+        {
+          "name": "Generate Class Result Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/class/:classId/results/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "class", ":classId", "results", ":termId"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Generate a PDF report of all results for a class in a term"
+          }
+        },
+        {
+          "name": "Generate Class Attendance Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/class/:classId/attendance/:termId",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "class", ":classId", "attendance", ":termId"],
+              "variable": [
+                {
+                  "key": "classId",
+                  "value": "60d0fe4f5311236168a109d5"
+                },
+                {
+                  "key": "termId",
+                  "value": "60d0fe4f5311236168a109d2"
+                }
+              ]
+            },
+            "description": "Generate a PDF report of attendance for a class in a term"
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Notification System",
+      "description": "Endpoints for managing notifications",
+      "item": [
+        {
+          "name": "Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications?page=1&limit=20&read=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "read",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Get all notifications for the current user"
+          }
+        },
+        {
+          "name": "Get Unread Notification Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "unread-count"]
+            },
+            "description": "Get the count of unread notifications for the current user"
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/:id/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", ":id", "read"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109f0"
+                }
+              ]
+            },
+            "description": "Mark a notification as read"
+          }
+        },
+        {
+          "name": "Mark All Notifications as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/mark-all-read",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "mark-all-read"]
+            },
+            "description": "Mark all notifications as read for the current user"
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109f0"
+                }
+              ]
+            },
+            "description": "Delete a notification"
+          }
+        },
+        {
+          "name": "Delete All Notifications",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"]
+            },
+            "description": "Delete all notifications for the current user"
+          }
+        },
+        {
+          "name": "Send Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "send"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipients\": {\n    \"role\": \"parent\"\n  },\n  \"type\": \"announcement\",\n  \"title\": \"School Closure\",\n  \"message\": \"The school will be closed on Friday, October 20, 2023, for staff development.\",\n  \"sendEmail\": true\n}"
+            },
+            "description": "Send a notification to users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. Event Management",
+      "description": "Endpoints for managing events",
+      "item": [
+        {
+          "name": "Get Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events?page=1&limit=10&startDate=2022-09-01&endDate=2022-12-31&eventType=meeting",
+              "host": ["{{baseUrl}}"],
+              "path": ["events"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2022-09-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2022-12-31"
+                },
+                {
+                  "key": "eventType",
+                  "value": "meeting"
+                }
+              ]
+            },
+            "description": "Get all events for the current user's school"
+          }
+        },
+        {
+          "name": "Get Single Event",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109f6"
+                }
+              ]
+            },
+            "description": "Get a single event by ID"
+          }
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["events"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"End of Term Examination\",\n  \"description\": \"First term examination for all classes\",\n  \"startDate\": \"2022-12-01\",\n  \"endDate\": \"2022-12-10\",\n  \"location\": \"School Premises\",\n  \"eventType\": \"exam\",\n  \"targetAudience\": [\"students\", \"teachers\"],\n  \"classes\": [\"60d0fe4f5311236168a109d5\", \"60d0fe4f5311236168a109d6\"],\n  \"sendEmail\": true\n}"
+            },
+            "description": "Create a new event"
+          }
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109f8"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated End of Term Examination\",\n  \"startDate\": \"2022-12-05\",\n  \"endDate\": \"2022-12-15\",\n  \"sendUpdateNotification\": true\n}"
+            },
+            "description": "Update an event"
+          }
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109f8"
+                }
+              ]
+            },
+            "description": "Delete an event"
+          }
+        },
+        {
+          "name": "Get Upcoming Events",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/events/upcoming?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", "upcoming"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Get upcoming events for the current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Messaging System",
+      "description": "Endpoints for messaging between users",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientId\": \"60d0fe4f5311236168a109e4\",\n  \"content\": \"Hello, I would like to discuss your child's progress in Mathematics.\",\n  \"subject\": \"Student Progress Discussion\",\n  \"studentIds\": [\"60d0fe4f5311236168a109db\"],\n  \"sendEmail\": true\n}"
+            },
+            "description": "Send a message to another user"
+          }
+        },
+        {
+          "name": "Get Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages/conversations?page=1&limit=10&archived=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", "conversations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "archived",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Get all conversations for the current user"
+          }
+        },
+        {
+          "name": "Get Conversation Messages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages/conversations/:conversationId?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", "conversations", ":conversationId"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "conversationId",
+                  "value": "60d0fe4f5311236168a109fa"
+                }
+              ]
+            },
+            "description": "Get all messages for a conversation"
+          }
+        },
+        {
+          "name": "Get Unread Message Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", "unread-count"]
+            },
+            "description": "Get the count of unread messages for the current user"
+          }
+        },
+        {
+          "name": "Mark Message as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages/:id/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", ":id", "read"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109fd"
+                }
+              ]
+            },
+            "description": "Mark a message as read"
+          }
+        },
+        {
+          "name": "Archive/Unarchive Conversation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages/conversations/:id/archive",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", "conversations", ":id", "archive"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "60d0fe4f5311236168a109fa"
+                }
+              ]
+            },
+            "description": "Archive or unarchive a conversation"
+          }
+        },
+        {
+          "name": "Get Contacts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/messages/contacts?role=parent",
+              "host": ["{{baseUrl}}"],
+              "path": ["messages", "contacts"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "parent"
+                }
+              ]
+            },
+            "description": "Get all contacts that the current user can message"
+          }
+        }
+      ]
+    },
+    {
+      "name": "16. Dashboard",
+      "description": "Endpoints for dashboard data",
+      "item": [
+        {
+          "name": "Get Parent Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/parent",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "parent"]
+            },
+            "description": "Get dashboard data for a parent"
+          }
+        },
+        {
+          "name": "Get Teacher Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/teacher",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "teacher"]
+            },
+            "description": "Get dashboard data for a teacher"
+          }
+        },
+        {
+          "name": "Get Child Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/parent/child/:studentId",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "parent", "child", ":studentId"],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "60d0fe4f5311236168a109db"
+                }
+              ]
+            },
+            "description": "Get detailed performance data for a parent's child"
+          }
+        },
+        {
+          "name": "Get Children Comparison",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/parent/children-comparison",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "parent", "children-comparison"]
+            },
+            "description": "Get comparison data for a parent's children"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://gradeflow-backend.onrender.com/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "your-jwt-token-here",
+      "type": "string"
+    }
+  ]
+}
