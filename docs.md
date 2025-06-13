@@ -26,7 +26,7 @@ This document provides comprehensive documentation for the GradeFlow School Mana
 All URLs referenced in the documentation have the following base:
 
 ```plaintext
-https://api.gradeflow.com/api
+https://gradeflow-backend.onrender.com/api
 ```
 
 ## Authentication
